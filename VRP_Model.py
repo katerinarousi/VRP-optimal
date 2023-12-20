@@ -26,16 +26,19 @@ class Model:
 
 # setting capacity
         values = lines[0].strip().split(',')
-        self.capacity = map(float, values[1])
+        self.capacity = int(values[1])
 
 # setting customers
         values = lines[2].strip().split(',')
-        totalCustomers = map(float, values[1])
+        totalCustomers = int(values[1])
 
         for line in lines[6:]:
             values = line.strip().split(',')
 
-            id_val, xcoord, ycoord, demand = map(float, values[0:4])
+            id_val = int(values[0])
+            xcoord = int(values[1])
+            ycoord = int(values[2])
+            demand = float(values[3])
 
             cust = Node(id_val, xcoord, ycoord, demand)
             self.allNodes.append(cust)
@@ -43,6 +46,7 @@ class Model:
 
         rows = len(self.allNodes)
         self.matrix = [[0.0 for x in range(rows)] for y in range(rows)]
+
 # Needs to be fixed
         for i in range(0, len(self.allNodes)):
             for j in range(0, len(self.allNodes)):
