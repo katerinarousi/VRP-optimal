@@ -20,7 +20,10 @@ class Model:
 
 # setting depot - storage
         values = lines[5].strip().split(',')
-        id_val, xcoord, ycoord, demand = map(float, values[0:4])
+        id_val = int(values[0])
+        xcoord = int(values[1])
+        ycoord = int(values[2])
+        demand = float(values[3])
         depot = Node(id_val, xcoord, ycoord, demand)
         self.allNodes.append(depot)
 
