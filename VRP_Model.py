@@ -13,26 +13,37 @@ class Model:
 
     def BuildModel(self):
         random.seed(1)
-        depot = Node(0, 50, 50, 0)
+
+        file_path = 'Instance.txt'
+        with open(file_path, 'r') as file:
+            lines = file.readlines()
+
+# setting depot - storage
+        values = lines[5].strip().split(',')
+        id_val, xcoord, ycoord, demand = map(float, values[0:4])
+        depot = Node(id_val, xcoord, ycoord, demand)
         self.allNodes.append(depot)
 
-        self.capacity = 50
-        totalCustomers = 120
+# setting capacity
+        values = lines[0].strip().split(',')
+        self.capacity = map(float, values[1])
 
-        # self.capacity = 10
-        # totalCustomers = 20
+# setting customers
+        values = lines[2].strip().split(',')
+        totalCustomers = map(float, values[1])
 
-        for i in range (0, totalCustomers):
-            x = random.randint(0, 100)
-            y = random.randint(0, 100)
-            dem = random.randint(1, 4)
-            cust = Node(i + 1, x, y, dem)
+        for line in lines[6:]:
+            values = line.strip().split(',')
+
+            id_val, xcoord, ycoord, demand = map(float, values[0:4])
+
+            cust = Node(id_val, xcoord, ycoord, demand)
             self.allNodes.append(cust)
             self.customers.append(cust)
 
         rows = len(self.allNodes)
         self.matrix = [[0.0 for x in range(rows)] for y in range(rows)]
-
+# Needs to be fixed
         for i in range(0, len(self.allNodes)):
             for j in range(0, len(self.allNodes)):
                 a = self.allNodes[i]
