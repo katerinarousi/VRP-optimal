@@ -28,6 +28,7 @@ class Solver:
         self.SetRoutedFlagToFalseForAllCustomers()
         self.Clarke_n_Wright()
         self.ReportSolution(self.sol)
+        self.ReportToFile(self.sol, "example_solution.txt")
         return self.sol
 
     def SetRoutedFlagToFalseForAllCustomers(self):
@@ -45,6 +46,20 @@ class Solver:
             print(rt.cost)
         SolDrawer.draw('MinIns', self.sol, self.allNodes)
         print(self.sol.cost)
+
+    def ReportToFile(self, sol, filename):
+        with open(filename, 'w') as f:
+            f.write('Cost: \n' + str(self.sol.cost) + '\n')
+            f.write('Routes: \n')
+            f.write(str(len(sol.routes)) + '\n')
+            for i in range(0,len(sol.routes)):
+                rt = sol.routes[i]
+                for j in range(0, len(rt.sequenceOfNodes)):
+                    f.write(str(rt.sequenceOfNodes[j].ID))
+                    if (j < len(rt.sequenceOfNodes)-1):
+                        f.write(',')
+                f.write('\n')
+
 
 
     def CalculateTotalCost(self, sol):
