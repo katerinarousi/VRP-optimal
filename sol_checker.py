@@ -96,7 +96,7 @@ def test_solution(file_name, all_nodes, capacity, empty_vehicle_weight):
         ids = [int(no_commas[i]) for i in range(len(no_commas))]
         nodes_sequence = [all_nodes[idd] for idd in ids]
         rt_tn_km, rt_load = calculate_route_details(nodes_sequence, empty_vehicle_weight)
-        for nn in range(1,len(nodes_sequence)):
+        for nn in range(1,len(nodes_sequence)-1):
             n_in = nodes_sequence[nn].ID
             times_visited[n_in] = times_visited[n_in] + 1
         # check capacity constraints
