@@ -63,14 +63,19 @@ class Solver:
 
 
     def CalculateTotalCost(self, sol):
-        c = 0
+        e = 0
         for i in range(0, len(sol.routes)):
             rt = sol.routes[i]
+            c = 0
+            d = rt.load + self.capacity
             for j in range(0, len(rt.sequenceOfNodes) - 1):
                 a = rt.sequenceOfNodes[j]
                 b = rt.sequenceOfNodes[j + 1]
                 c += self.distanceMatrix[a.ID][b.ID]
-        return c
+                d -= a.demand               # when j = 0, demand equals zero because it refers to the depot
+                route = d * c
+            e += route
+        return e
 
     def UpdateRouteCostAndLoad(self, rt: Route):
         tc = 0
@@ -118,8 +123,8 @@ class Solver:
             for j in range(i + 1, len(self.customers)):
                 n2 = self.customers[j]
 
-                score = self.distanceMatrix[n1.ID][self.depot.ID] + self.distanceMatrix[self.depot.ID][n2.ID]
-                score -= self.distanceMatrix[n1.ID][n2.ID]
+                score = self.distanceMatrix[self.depot.ID][n1.ID] * (self.capacity + n1.demand) # Maybe + n2.demand
+                score -= self.distanceMatrix[n1.ID][n2.ID] * (self.capacity + n2.demand)
 
                 sav = Saving(n1, n2, score)
                 savings.append(sav)
@@ -135,7 +140,7 @@ class Solver:
             n.position_in_route = 1
             rt.sequenceOfNodes.insert(1, n)
             rt.load = n.demand
-            rt.cost = self.distanceMatrix[self.depot.ID][n.ID] + self.distanceMatrix[n.ID][self.depot.ID]
+            rt.cost = self.distanceMatrix[self.depot.ID][n.ID] * (self.empty_weight + n.demand)  # removed the return back to the depot + added the calculation of weight
             s.routes.append(rt)
             s.cost += rt.cost
         return s

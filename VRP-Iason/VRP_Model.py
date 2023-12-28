@@ -31,6 +31,10 @@ class Model:
         values = lines[0].strip().split(',')
         self.capacity = int(values[1])
 
+# setting empty_weight
+        values = lines[1].strip().split(',')
+        self.empty_weight = int(values[1])        
+
 # setting customers
         values = lines[2].strip().split(',')
         totalCustomers = int(values[1])
@@ -50,9 +54,8 @@ class Model:
         rows = len(self.allNodes)
         self.matrix = [[0.0 for x in range(rows)] for y in range(rows)]
 
-# Needs to be fixed
         for i in range(0, len(self.allNodes)):
-            for j in range(0, len(self.allNodes)):
+            for j in range(0, len(self.allNodes)):   # Maybe it could be: 'for j in range(i, len(self.allNodes)):'
                 a = self.allNodes[i]
                 b = self.allNodes[j]
                 dist = math.sqrt(math.pow(a.x - b.x, 2) + math.pow(a.y - b.y, 2))
@@ -70,7 +73,7 @@ class Route:
     def __init__(self, dp, cap):
         self.sequenceOfNodes = []
         self.sequenceOfNodes.append(dp)
-        self.sequenceOfNodes.append(dp)
+        self.sequenceOfNodes.append(dp)           # MUST REMOVE
         self.cost = 0
         self.capacity = cap
         self.load = 0
