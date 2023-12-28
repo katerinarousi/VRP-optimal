@@ -67,7 +67,7 @@ class Solver:
         for i in range(0, len(sol.routes)):
             rt = sol.routes[i]
             c = 0
-            d = rt.load + self.capacity
+            d = rt.load + self.empty_vehicle_weight
             for j in range(0, len(rt.sequenceOfNodes) - 1):
                 a = rt.sequenceOfNodes[j]
                 b = rt.sequenceOfNodes[j + 1]
@@ -123,8 +123,8 @@ class Solver:
             for j in range(i + 1, len(self.customers)):
                 n2 = self.customers[j]
 
-                score = self.distanceMatrix[self.depot.ID][n1.ID] * (self.capacity + n1.demand) # Maybe + n2.demand
-                score -= self.distanceMatrix[n1.ID][n2.ID] * (self.capacity + n2.demand)
+                score = self.distanceMatrix[self.depot.ID][n1.ID] * (self.empty_vehicle_weight + n1.demand) # Maybe + n2.demand
+                score -= self.distanceMatrix[n1.ID][n2.ID] * (self.empty_vehicle_weight + n2.demand)
 
                 sav = Saving(n1, n2, score)
                 savings.append(sav)
@@ -140,7 +140,7 @@ class Solver:
             n.position_in_route = 1
             rt.sequenceOfNodes.insert(1, n)
             rt.load = n.demand
-            rt.cost = self.distanceMatrix[self.depot.ID][n.ID] * (self.empty_weight + n.demand)  # removed the return back to the depot + added the calculation of weight
+            rt.cost = self.distanceMatrix[self.depot.ID][n.ID] * (self.empty_vehicle_weight + n.demand)  # removed the return back to the depot + added the calculation of weight
             s.routes.append(rt)
             s.cost += rt.cost
         return s

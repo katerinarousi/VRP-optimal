@@ -119,5 +119,5 @@ def test_solution(file_name, all_nodes, capacity, empty_vehicle_weight):
     # everything is ok
     print('Solution is ΟΚ. Total Cost:', objective_calculated)
 
-all_nodes, capacity, empty_vehicle_weight = load_model('Instance.txt')
-test_solution('example_solution.txt', all_nodes, capacity, empty_vehicle_weight)
+all_nodes, capacity, empty_vehicle_weight = load_model('VRP-Iason/Instance.txt')
+test_solution('VRP-Iason/example_solution.txt', all_nodes, capacity, empty_vehicle_weight)

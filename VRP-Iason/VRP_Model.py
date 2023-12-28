@@ -31,9 +31,9 @@ class Model:
         values = lines[0].strip().split(',')
         self.capacity = int(values[1])
 
-# setting empty_weight
+# setting empty_vehicle_weight
         values = lines[1].strip().split(',')
-        self.empty_weight = int(values[1])        
+        self.empty_vehicle_weight = int(values[1])        
 
 # setting customers
         values = lines[2].strip().split(',')
