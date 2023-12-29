@@ -124,8 +124,7 @@ class Solver:
                 continue
             if self.not_first_or_last(rt1, n1) or self.not_first_or_last(rt2, n2): #not in the corner
                 continue
-            if self.onlyDemand(rt1) + self.onlyDemand(rt2) + self.empty_vehicle_weight > self.capacity: #capacity overloaded
-                #prosthetw baros kenou oxhmatos giati xrhsimopoiw methodo pou metra mono each rt's demand!
+            if self.onlyDemand(rt1) + self.onlyDemand(rt2) > self.capacity: #capacity overloaded
                 continue
             
             self.merge_routes(n1, n2) #mporei na ginei merge 
