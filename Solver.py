@@ -89,7 +89,6 @@ class Solver:
             n.position_in_route = 1
             rt.sequenceOfNodes.insert(1, n)
             s.routes.append(rt)
-            self.UpdateRouteCostAndLoad(rt)
         return s
     
 
@@ -160,7 +159,6 @@ class Solver:
 
         self.sol.routes.remove(rt2)
         self.update_route_customers(rt1)
-        self.UpdateRouteCostAndLoad(rt1)
 
         
     def update_route_customers(self, rt):
