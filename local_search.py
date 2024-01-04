@@ -608,7 +608,7 @@ class local_search:
             for j in range(i + 1, len(self.customers)): #anw trigwnikos pinakas
                 n2 = self.customers[j]
 
-                score = (self.empty_vehicle_weight + n2.demand) * self.distanceMatrix[self.depot.ID][n2.ID]  # Maybe this is (self.empty_vehicle_weight + n1.demand)*self.distanceMatrix[self.depot.ID][n1.ID]
+                score = (self.empty_vehicle_weight + n1.demand) * self.distanceMatrix[self.depot.ID][n1.ID]  # Maybe this is (self.empty_vehicle_weight + n1.demand)*self.distanceMatrix[self.depot.ID][n1.ID]
                 score -= (self.empty_vehicle_weight + n1.demand + n2.demand) * self.distanceMatrix[n1.ID][n2.ID]
                 
                 sav = Saving(n1, n2, score)
