@@ -125,7 +125,7 @@ class Solver1:
         while terminationCondition is False:
 
             self.InitializeOperators(rm)
-            #SolDrawer.draw(localSearchIterator, self.sol, self.allNodes)
+            SolDrawer.draw(localSearchIterator, self.sol, self.allNodes)
             # Relocations
             if operator == 0:
                 
