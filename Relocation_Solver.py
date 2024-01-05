@@ -136,12 +136,19 @@ class Solver1:
                         costRemoved = 0
 
                         if originRouteIndex == targetRouteIndex :
-                            for x in range(originNodeIndex+1, targetNodeIndex):
+                            for x in range(originNodeIndex + 1, targetNodeIndex-1):
                                 costAdded += B.demand * self.distanceMatrix[rt1.sequenceOfNodes[x].ID][rt1.sequenceOfNodes[x+1].ID]
                             
                         else:
-                            for x in range(0,targetNodeIndex):
+                            for x in range(0,targetNodeIndex-1):
                                 costAdded += B.demand * self.distanceMatrix[rt2.sequenceOfNodes[x].ID][rt2.sequenceOfNodes[x+1].ID]
+
+                        if originRouteIndex == targetRouteIndex:
+                            for x in range(targetNodeIndex-1, originNodeIndex -1):
+                                costRemoved += B.demand * self.distanceMatrix[rt1.sequenceOfNodes[x].ID][rt1.sequenceOfNodes[x+1].ID]
+                        else:
+                            for x in range(0,originNodeIndex - 1):
+                                costRemoved += B.demand * self.distanceMatrix[rt1.sequenceOfNodes[x].ID][rt1.sequenceOfNodes[x+1].ID]
 
                         costAdded = self.distanceMatrix[A.ID][C.ID]*C.demand + self.distanceMatrix[F.ID][B.ID]*B.demand + self.distanceMatrix[B.ID][G.ID]*G.demand
                         costRemoved = self.distanceMatrix[A.ID][B.ID]*B.demand + self.distanceMatrix[B.ID][C.ID]*C.demand + self.distanceMatrix[F.ID][G.ID]*G.demand
