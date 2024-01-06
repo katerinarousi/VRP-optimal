@@ -61,9 +61,9 @@ class Solver1:
             rt = sol.routes[i]
             for j in range (len(rt.sequenceOfNodes)):
                 print(rt.sequenceOfNodes[j].ID, end=' ')
-            #print(rt.cost, rt.load)
+            print(rt.cost, rt.load)
         #SolDrawer.draw('MinIns', self.sol, self.allNodes)
-        #print(self.sol.cost)
+        print(self.sol.cost)
 
     def ReportToFile(self, sol, filename):
         with open(filename, 'w') as f:
@@ -99,7 +99,7 @@ class Solver1:
                 else:
                     terminationCondition = True
 
-           # self.TestSolution()
+                #self.TestSolution()
 
             if (self.sol.cost < self.bestSolution.cost):
                 self.bestSolution = self.cloneSolution(self.sol)
@@ -132,31 +132,47 @@ class Solver1:
                         if rt1 != rt2:
                             if rt2.load + B.demand > rt2.capacity:
                                 continue
-                        costAdded = 0
-                        costRemoved = 0
-
-                        if originRouteIndex == targetRouteIndex :
-                            for x in range(originNodeIndex + 1, targetNodeIndex-1):
-                                costAdded += B.demand * self.distanceMatrix[rt1.sequenceOfNodes[x].ID][rt1.sequenceOfNodes[x+1].ID]
-                            
-                        else:
-                            for x in range(0,targetNodeIndex-1):
-                                costAdded += B.demand * self.distanceMatrix[rt2.sequenceOfNodes[x].ID][rt2.sequenceOfNodes[x+1].ID]
+                        
+                        rt1copy = self.cloneRoute(rt1)
+                        rt2copy = self.cloneRoute(rt2)
 
                         if originRouteIndex == targetRouteIndex:
-                            for x in range(targetNodeIndex-1, originNodeIndex -1):
-                                costRemoved += B.demand * self.distanceMatrix[rt1.sequenceOfNodes[x].ID][rt1.sequenceOfNodes[x+1].ID]
+                            del rt1copy.sequenceOfNodes[originNodeIndex]
+                            if (originNodeIndex < targetNodeIndex):
+                                rt2copy.sequenceOfNodes.insert(targetNodeIndex, B)
+                            else:
+                                rt2copy.sequenceOfNodes.insert(targetNodeIndex + 1, B)
+
+                            self.UpdateRouteCostAndLoad(rt1copy)
                         else:
-                            for x in range(0,originNodeIndex - 1):
-                                costRemoved += B.demand * self.distanceMatrix[rt1.sequenceOfNodes[x].ID][rt1.sequenceOfNodes[x+1].ID]
+                            del rt1copy.sequenceOfNodes[originNodeIndex]
+                            rt2copy.sequenceOfNodes.insert(targetNodeIndex + 1, B)
+        
+                        self.UpdateRouteCostAndLoad(rt1copy)
+                        self.UpdateRouteCostAndLoad(rt2copy)
 
-                        costAdded = self.distanceMatrix[A.ID][C.ID]*C.demand + self.distanceMatrix[F.ID][B.ID]*B.demand + self.distanceMatrix[B.ID][G.ID]*G.demand
-                        costRemoved = self.distanceMatrix[A.ID][B.ID]*B.demand + self.distanceMatrix[B.ID][C.ID]*C.demand + self.distanceMatrix[F.ID][G.ID]*G.demand
+                        #if originRouteIndex == targetRouteIndex :
+                        #    for x in range(originNodeIndex + 1, targetNodeIndex-1):
+                        #        costAdded += B.demand * self.distanceMatrix[rt1.sequenceOfNodes[x].ID][rt1.sequenceOfNodes[x+1].ID]
+                            
+                        #else:
+                        #    for x in range(0,targetNodeIndex-1):
+                        #        costAdded += B.demand * self.distanceMatrix[rt2.sequenceOfNodes[x].ID][rt2.sequenceOfNodes[x+1].ID]
 
-                        originRtCostChange = self.distanceMatrix[A.ID][C.ID]*C.demand - self.distanceMatrix[A.ID][B.ID]*B.demand - self.distanceMatrix[B.ID][C.ID]*C.demand
-                        targetRtCostChange = self.distanceMatrix[F.ID][B.ID]*B.demand + self.distanceMatrix[B.ID][G.ID]*G.demand - self.distanceMatrix[F.ID][G.ID]*G.demand
+                        #if originRouteIndex == targetRouteIndex:
+                        #    for x in range(targetNodeIndex-1, originNodeIndex -1):
+                        #        costRemoved += B.demand * self.distanceMatrix[rt1.sequenceOfNodes[x].ID][rt1.sequenceOfNodes[x+1].ID]
+                        #else:
+                        #   for x in range(0,originNodeIndex - 1):
+                        #       costRemoved += B.demand * self.distanceMatrix[rt1.sequenceOfNodes[x].ID][rt1.sequenceOfNodes[x+1].ID]
 
-                        moveCost = costAdded - costRemoved
+                        #costAdded = self.distanceMatrix[A.ID][C.ID]*C.demand + self.distanceMatrix[F.ID][B.ID]*B.demand + self.distanceMatrix[B.ID][G.ID]*G.demand
+                        #costRemoved = self.distanceMatrix[A.ID][B.ID]*B.demand + self.distanceMatrix[B.ID][C.ID]*C.demand + self.distanceMatrix[F.ID][G.ID]*G.demand
+
+                        originRtCostChange = rt1copy.cost - rt1.cost 
+                        targetRtCostChange = rt2copy.cost - rt2.cost
+
+                        moveCost = rt1copy.cost + rt2copy.cost - rt1.cost -rt2.cost
 
                         if (moveCost < rm.moveCost):
                             self.StoreBestRelocationMove(originRouteIndex, targetRouteIndex, originNodeIndex, targetNodeIndex, moveCost, originRtCostChange, targetRtCostChange, rm)
@@ -188,7 +204,7 @@ class Solver1:
             else:
                 targetRt.sequenceOfNodes.insert(rm.targetNodePosition + 1, B)
 
-            originRt.cost += rm.moveCost
+            self.UpdateRouteCostAndLoad(originRt)
         else:
             del originRt.sequenceOfNodes[rm.originNodePosition]
             targetRt.sequenceOfNodes.insert(rm.targetNodePosition + 1, B)
@@ -205,6 +221,21 @@ class Solver1:
             print('Cost Issue')
             #print(oldCost,newCost,rm.moveCost)
 
+    def TestSolution(self):
+        totalSolCost = 0
+        for r in range (0, len(self.sol.routes)):
+            rt: Route = self.sol.routes[r]
+            rtCost = 0
+            rtLoad = 0
+            for n in range (0 , len(rt.sequenceOfNodes) - 1):
+                A = rt.sequenceOfNodes[n]
+                B = rt.sequenceOfNodes[n + 1]
+                rtCost += self.distanceMatrix[A.ID][B.ID]
+                rtLoad += A.demand
+            if abs(rtCost - rt.cost) > 0.0001:
+                print ('Route Cost problem')
+            if rtLoad != rt.load:
+                print ('Route Load problem')
     def CalculateTotalCost(self, sol):
         sol.cost = 0.0
         for i in range(len(sol.routes)):
