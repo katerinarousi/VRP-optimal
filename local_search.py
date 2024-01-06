@@ -328,7 +328,7 @@ class local_search:
             for j in range (0, len(rt.sequenceOfNodes)):
                 print(rt.sequenceOfNodes[j].ID, end=' ')
             print(rt.cost)
-        #SolDrawer.draw('MinIns', self.sol, self.allNodes)
+        SolDrawer.draw('MinIns', self.sol, self.allNodes)
         print (self.sol.cost)
 
     def GetLastOpenRoute(self):
@@ -500,7 +500,7 @@ class local_search:
             for n in range (0 , len(rt.sequenceOfNodes) - 1):
                 A = rt.sequenceOfNodes[n]
                 B = rt.sequenceOfNodes[n + 1]
-                rtCost += self.distanceMatrix[A.ID][B.ID] * (self.empty_vehicle_weight + A.demand + B.demand) # Study this one better 
+                rtCost += self.distanceMatrix[A.ID][B.ID] * (self.empty_vehicle_weight + A.demand + B.demand)
                 rtLoad += A.demand
             if abs(rtCost - rt.cost) > 0.0001:
                 print ('Route Cost problem')
