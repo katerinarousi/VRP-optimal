@@ -1,5 +1,5 @@
 from VRP_Model import *
-#from SolutionDrawer import *
+from SolutionDrawer import *
 
 class Solution:
     def __init__(self):
@@ -85,7 +85,7 @@ class Solver2:
         while terminationCondition is False:
 
             self.InitializeOperators(sm)
-           # SolDrawer.draw(localSearchIterator, self.sol, self.allNodes)
+            SolDrawer.draw(localSearchIterator, self.sol, self.allNodes)
             self.flag = False
             self.counter = 0
             self.FindBestSwapMove(sm)
