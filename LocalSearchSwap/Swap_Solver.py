@@ -59,7 +59,7 @@ class Solver2:
             for j in range (len(rt.sequenceOfNodes)):
                 print(rt.sequenceOfNodes[j].ID, end=' ')
             print(rt.cost, rt.load)
-        #SolDrawer.draw('MinIns', self.sol, self.allNodes)
+        SolDrawer.draw('MinIns', self.sol, self.allNodes)
         print(self.sol.cost)
 
     def ReportToFile(self, sol, filename):
